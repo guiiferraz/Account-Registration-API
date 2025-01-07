@@ -47,7 +47,7 @@ First of all, you will need some prerequisites:
 
 How to clone the AR API 
 ```
-git clone <url do repositorio gui>
+git clone https://github.com/guiiferraz/Account-Registration-API/
 ```
 
 ### Config .env variables
