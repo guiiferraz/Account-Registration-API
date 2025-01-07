@@ -1,0 +1,14 @@
+# Ignorar venv e ambientes/arquivos similares
+
+*.xlsx
+.env
+venv/
+
+# Ignorar arquivos python compilados
+
+__pycache__/
+
+# Ignorar arquivos compilados pytest
+
+.pytest_cache/
+
