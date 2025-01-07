@@ -2,9 +2,6 @@ from fastapi import HTTPException
 from utils.utils import FileHandler
 from models import AccountModel, AccountModelResponse, db_session
 from sqlalchemy import select, update
-import sys
-sys.path.insert(0, r'c:\Users\Guilherme\Desktop\Faculdade\api_project\src')
-
 
 class AccountConnector:
     def __init__(self):

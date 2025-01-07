@@ -1,8 +1,5 @@
-import sys
 from models.account import AccountModelResponse
 from connectors.account_connector import AccountConnector, FileConnector
-
-sys.path.insert(0, r'c:\Users\Guilherme\Desktop\Faculdade\api_project\src')
 
 class AccountController:
     def __init__(self):

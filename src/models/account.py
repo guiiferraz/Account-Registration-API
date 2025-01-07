@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class AccountModelResponse(BaseModel):  # Modelo Pydantic para o fastapi
+class AccountModelResponse(BaseModel):
     name: str
     number: int
 
@@ -13,7 +13,7 @@ class AccountModelResponse(BaseModel):  # Modelo Pydantic para o fastapi
         from_attributes = True
 
 
-class AccountModel(Base):  # Modelo sqlalchemy para a interacao com o db
+class AccountModel(Base):
     __tablename__ = "Accounts"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
