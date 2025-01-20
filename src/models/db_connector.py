@@ -5,16 +5,20 @@ import os
 
 load_dotenv()
 
-
 username = os.getenv('USERNAME')
 password = os.getenv('PASSWORD')
 host = os.getenv('HOST')
 port = os.getenv('PORT')
 db_name = os.getenv('DB_NAME')
+acces_db = os.getenv('ACCESS_DB')
 
-db_url = f"postgresql+psycopg://{username}:{password}@{host}:{port}/{db_name}"
 
 def db_session():
+    if acces_db == 'test':
+        db_url = os.getenv('DB_URL_TEST')
+    else:
+        db_url = f"postgresql+psycopg://{username}:{password}@{host}:{port}/{db_name}"
+
     engine = create_engine(db_url)
     session = Session(engine)
 
@@ -31,6 +35,3 @@ def db_session():
 
 
 db_session()
-
-
-testf8au = os.environ["ACCESS_DB"] = "PROD"
