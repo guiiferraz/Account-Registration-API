@@ -14,6 +14,7 @@ db_name = os.getenv('DB_NAME')
 
 db_url = f"postgresql+psycopg://{username}:{password}@{host}:{port}/{db_name}"
 
+
 def db_session():
     engine = create_engine(db_url)
     session = Session(engine)
@@ -31,6 +32,3 @@ def db_session():
 
 
 db_session()
-
-
-testf8au = os.environ["ACCESS_DB"] = "PROD"
