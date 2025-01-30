@@ -1,9 +1,9 @@
+import sys
+sys.path.insert(0, r'c:\Users\Guilherme\Desktop\Faculdade\api_project\src')
 from fastapi import HTTPException
 from utils.utils import FileHandler
 from models import AccountModel, AccountModelResponse, db_session
 from sqlalchemy import select, update
-import sys
-sys.path.insert(0, r'c:\Users\Guilherme\Desktop\Faculdade\api_project\src')
 
 class AccountConnector:
     def __init__(self):
@@ -90,8 +90,18 @@ class FileConnector:
         data.read_excel()
 
         with db_session() as session:
+            accounts_list = list()
+
             for row in data.read_excel().itertuples():
                 new_account = AccountModel(Name=row.Nome, Number=row.Numero)
+                
+                account = dict()
+                account['name'] = new_account.Name
+                account['number'] = new_account.Number
+
+                accounts_list.append(account)
 
                 session.add(new_account)
                 session.commit()
+
+            return accounts_list

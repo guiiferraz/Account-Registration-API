@@ -9,7 +9,7 @@ class AccountModelResponse(BaseModel):  # Modelo Pydantic para o fastapi
     name: str
     number: int
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
 
 

@@ -32,6 +32,3 @@ def db_session():
         print(f"Error with connection: {e}")
 
     return session
-
-
-db_session()

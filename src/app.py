@@ -43,7 +43,7 @@ def register_file_db(token: str = Depends(oauth2_scheme), uid_header: str = Head
     
     add_file_db = FileResource()
     result = add_file_db.register_file()
-    return {"Message:": "Accounts registered in database with susscessfully!"}
+    return result
 
 
 @app.post('/accounts/register/new', response_model=AccountModelResponse)
