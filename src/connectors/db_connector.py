@@ -16,8 +16,10 @@ acces_db = os.getenv('ACCESS_DB')
 def db_session():
     if acces_db == 'test':
         db_url = os.getenv('DB_URL_TEST')
-    else:
+    elif acces_db == 'production':
         db_url = f"postgresql+psycopg://{username}:{password}@{host}:{port}/{db_name}"
+    else:
+        print('Error to connection with respective url')
 
     engine = create_engine(db_url)
 

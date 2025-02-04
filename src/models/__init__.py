@@ -1,2 +1,2 @@
 from .account import AccountModel, AccountModelResponse
-from .db_connector import db_session
+from ..connectors.db_connector import db_session

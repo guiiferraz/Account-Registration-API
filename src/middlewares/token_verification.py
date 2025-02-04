@@ -1,6 +1,6 @@
 import jwt
 from fastapi import HTTPException, Header
-from middlewares.create_token import SECRET_KEY, ALGORITHM
+from src.middlewares.create_token import SECRET_KEY, ALGORITHM
 
 class VerificationToken:
     def __init__(self):

@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'src')))
 from src.models.account import AccountModel
-from src.models.db_connector import db_session
+from src.connectors.db_connector import db_session
 from sqlalchemy import text
 
 
