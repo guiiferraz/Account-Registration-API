@@ -5,7 +5,7 @@ from utils.utils import FileHandler
 from src.models import AccountModel, AccountModelResponse, db_session
 from sqlalchemy import select, update
 
-class AccountConnector:
+class AccountController:
     def __init__(self):
         pass
 
@@ -81,7 +81,7 @@ class AccountConnector:
             session.commit()
 
 
-class FileConnector:
+class FileController:
     def __init__(self):
         pass
 

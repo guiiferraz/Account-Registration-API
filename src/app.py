@@ -3,7 +3,7 @@ from fastapi import FastAPI, Depends, Header
 from src.models.account import  AccountModelResponse
 from src.middlewares.create_token import TokenCreation, oauth2_scheme
 from src.middlewares.token_verification import VerificationToken
-from src.controllers.account_controller import AccountConnector, FileConnector
+from src.controllers.account_controller import AccountController, FileController
 
 app = FastAPI()
 
@@ -21,7 +21,7 @@ def list_account(token: str = Depends(oauth2_scheme), uid_header: str = Header(.
     route_security = VerificationToken()
     auth_token = route_security.verify_token(token, uid_header)
 
-    view_account = AccountConnector()
+    view_account = AccountController()
     result = view_account.list_accounts()
     return result
 
@@ -31,7 +31,7 @@ def view_account_by_name(name: str, token: str = Depends(oauth2_scheme), uid_hea
     route_security = VerificationToken()
     auth_token = route_security.verify_token(token, uid_header)
 
-    view_acc_name = AccountConnector()
+    view_acc_name = AccountController()
     result = view_acc_name.list_acc_name(name)
     return result
 
@@ -41,7 +41,7 @@ def register_file_db(token: str = Depends(oauth2_scheme), uid_header: str = Head
     route_security = VerificationToken()
     auth_token = route_security.verify_token(token, uid_header)
     
-    add_file_db = FileConnector()
+    add_file_db = FileController()
     result = add_file_db.xlsx_to_db()
     return result
 
@@ -51,7 +51,7 @@ def new_account(account: AccountModelResponse, token: str = Depends(oauth2_schem
     route_security = VerificationToken()
     auth_token = route_security.verify_token(token, uid_header)
     
-    account_resource = AccountConnector()
+    account_resource = AccountController()
     result = account_resource.new_account(account)
     return AccountModelResponse(name=account.name, number=account.number)
 
@@ -61,7 +61,7 @@ def update_account(id_account: int, account: AccountModelResponse, token: str = 
     route_security = VerificationToken()
     auth_token = route_security.verify_token(token, uid_header)
     
-    account_resource = AccountConnector()
+    account_resource = AccountController()
     result = account_resource.update_account(id_account, account)
     return AccountModelResponse(name=account.name, number=account.number)
 
@@ -71,7 +71,7 @@ def del_account(id_account: int, token: str = Depends(oauth2_scheme), uid_header
     route_security = VerificationToken()
     auth_token = route_security.verify_token(token, uid_header)
     
-    account_resource = AccountConnector()
+    account_resource = AccountController()
     result = account_resource.delete_account(id_account)
     return {"message": "Account deleted successfully"}
 
