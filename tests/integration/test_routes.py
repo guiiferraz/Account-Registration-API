@@ -1,63 +1,27 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'src')))
-import pytest
-from src.app import app
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from fastapi.testclient import TestClient
-from src.models.account import AccountModel, AccountModelResponse
+from src.models.account import AccountModel
+from src.models.db_connector import db_session
+from sqlalchemy import text
 
 
-@pytest.fixture(scope="module")
-def testclient():
-    client = TestClient(app) 
+def test_connection_with_database():
+    # Arrange:
+    session = db_session()
+
+    # Act:
+    if session is None:
+        print("Error with connection to database!")
+        return 
     
-    response = client.post('/token')
-    token = response.json().get('token')
+    result = session.execute(text("SELECT 1")).scalar()
 
-    client.headers = {
-        "Authorization": f'Bearer {token}',
-        "uid-header": "a31755cd-66df-4a84-a747-02b1de760708"
-    }
-    
-    return client
+    # Assert:
+    assert result == 1
 
-
-@pytest.fixture(scope='function')
-def session():
-    DB_URL_TEST = os.getenv('DB_URL_TEST')
-    engine = create_engine(DB_URL_TEST)
-
-    Session = sessionmaker(bind=engine)
-    session = Session()
-
-    session.begin()
-
-    yield session
-
-    session.rollback()
+    # Teardown:
     session.close()
-
-
-@pytest.fixture()
-def account_setup():
-    account = AccountModel(
-        Name='test',
-        Number=123
-    )
-
-    return account
-
-
-@pytest.fixture()
-def account_pydantic():
-    account = AccountModelResponse(
-        name='testee',
-        number=123
-    )
-
-    return account
 
 
 def test_homepage_returning_a_welcome_message(testclient):
@@ -83,9 +47,11 @@ def test_returning_a_list_of_all_accounts_in_database(testclient):
     assert isinstance(data, list)
 
 
-def test_returnin_a_list_with_the_respective_account_name(testclient, session, account_setup):
+def test_returnin_a_list_with_the_respective_account_name(testclient, session, account):
     # Arrange/SetUp:
-    new_account = account_setup
+    new_account = AccountModel(
+        id=account['id'], Name=account['name'], Number=account['number']
+    )
     session.add(new_account)
 
     # Act:
@@ -126,12 +92,11 @@ def test_returning_a_successfull_list_when_register_all_accounts_file_in_databas
         session.commit()
 
 
-def test_returning_the_respective_account_if_registered_in_database(testclient, account_pydantic, session):
+def test_returning_the_respective_account_if_registered_in_database(testclient, session, account):
     # Arrange:
-    new_account = account_pydantic.model_dump()
 
     # Act:
-    response = testclient.post('/accounts/register/new', json=new_account)
+    response = testclient.post('/accounts/register/new', json=account)
     data = response.json()
 
     # Assert: 
@@ -145,22 +110,22 @@ def test_returning_the_respective_account_if_registered_in_database(testclient, 
     assert isinstance(data['number'], int)
     
     # Teardown:
-    session.query(AccountModel).filter(AccountModel.Name == new_account['name']).delete(synchronize_session=False)
+    session.query(AccountModel).filter(AccountModel.Name == account['name']).delete(synchronize_session=False)
     session.commit()
 
 
-def test_returning_account_payload_when_the_update_data_is_successfully(testclient, session, account_pydantic, account_setup):
+def test_returning_account_payload_when_the_update_data_is_successfully(testclient, session, account):
     # Arrange:
-    new_account = account_setup
+    new_account = AccountModel(
+        id=1, Name='testuser2', Number=321
+    )
     session.add(new_account)
     session.commit()
 
-    id_account = new_account.id
-
-    update_account = account_pydantic.model_dump()
+    id_account =new_account.id 
 
     # Act:
-    response = testclient.put(f'/accounts/update/{id_account}', json=update_account)
+    response = testclient.put(f'/accounts/update/{id_account}', json=account)
     data = response.json()
 
     # Assert:
@@ -178,15 +143,18 @@ def test_returning_account_payload_when_the_update_data_is_successfully(testclie
     session.commit()
 
 
-def test_returning_a_successfull_message_if_the_account_was_deleted(testclient, session, account_pydantic, account_setup):
-    # Arrante:
-    ...
-    
+def test_returning_a_successfull_message_if_the_account_was_deleted(testclient, session, account):
+    # Arrange:
+    new_account = AccountModel(
+        id=account['id'], Name=account['name'], Number=account['number']
+    )
+    session.add(new_account)
+    session.commit()
+
+    id_account = new_account.id
     # Act:
-    ...
+    response = testclient.delete(f'/accounts/delete/{id_account}')
+    data = response.json()
 
     # Assert:
-    ...
-
-    # Teardown:
-    ...
+    assert response.status_code == 200

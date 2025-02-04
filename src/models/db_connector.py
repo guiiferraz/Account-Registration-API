@@ -20,7 +20,6 @@ def db_session():
         db_url = f"postgresql+psycopg://{username}:{password}@{host}:{port}/{db_name}"
 
     engine = create_engine(db_url)
-    session = Session(engine)
 
     try:
         with Session(engine) as session:
@@ -28,7 +27,9 @@ def db_session():
 
             print("Connection with successfully!")
 
+            return session
+        
     except Exception as e:
         print(f"Error with connection: {e}")
 
-    return session
+        return None
